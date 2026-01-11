@@ -10,9 +10,39 @@
     <link rel="stylesheet" href="main-list-styles.css">
     <link rel="stylesheet" href="/fonts.css">
     <link rel="icon" href="/img/icono.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
 </head>
 <body>
+    <div class="modal-container">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-content">Add a video</div>
+                <span class="material-symbols-outlined close-button">Close</span>
+            </div>
+            <div class="modal-content">
+                <form class="modal-content__form">
+                    <div class="form__input-container">
+                        Title:
+                        <input type="text" class="form__input" id="title">
+                    </div>
+                    <div class="form__input-container">
+                        Link:
+                        <input type="text" class="form__input" id="link">
+                    </div>
+                    <div class="form__input-container">
+                        Img:
+                        <label for="image" class="form__input-image">Seleccionar Archivo</label>
+                        <input type="file" accept="image/*" class="form__input form__input-image-hidden" id="image">
+                    </div>
+                    <div class="form__input-container">
+                        <input type="submit" class="form__input form__input-submit" value="Add">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
     <header class="header">
         <input type="checkbox" id="menu-toggle" class="header__checkbox">
         <label for="menu-toggle" class="header__open-nav-button" role="button">=</label>
