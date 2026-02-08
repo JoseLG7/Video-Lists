@@ -19,6 +19,8 @@ body {
     background-color: rgba(256, 256, 256, 0.95);
     position: fixed;
     top: 0;
+    display: flex;
+
 }
 
 .header__content {
@@ -26,6 +28,19 @@ body {
     padding: 0px;
     margin: 0 150px;
 }
+
+.header__language {
+    justify-self: center;
+    align-self: center;
+    margin-right: 30px;
+}
+
+#language {
+    color:#444446;
+
+}
+
+
 
 .content__list {
     margin: 0;

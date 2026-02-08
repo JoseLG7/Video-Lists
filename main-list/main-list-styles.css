@@ -27,6 +27,8 @@ img {
     top: 0;
     z-index: 1;
     margin-bottom: 30px;
+    display: flex;
+
 }
 
 .header__content {
@@ -34,6 +36,19 @@ img {
     padding: 0px;
     margin: 0 150px;
 }
+
+.header__language {
+    justify-self: center;
+    align-self: center;
+    margin-right: 30px;
+}
+
+#language {
+    color:#444446;
+
+}
+
+
 
 .content__list {
     margin: 0;
@@ -103,7 +118,7 @@ img {
     display: flex;
     gap: 25px;
     justify-content: center;
-    margin-bottom: 50px;
+    margin-bottom: 145px;
 }
 /*.container__list-container {
     padding-top: 100px;
@@ -162,472 +177,7 @@ img {
 }
 
 
-/* THUMBNAILS IMAGE */
 
-#li-container__li-thumbnail-osnkop1 {
-    background-image: url("/img/oshi-no-ko-s1.png");
-}
-
-#li-container__li-thumbnail-dbgtop {
-    background-image: url("/img/dragon-ball-gt.jpg");
-}
-
-#li-container__li-thumbnail-llsop1 {
-    background-image: url("/img/love-live-sunshine-s1.jpg");
-}
-
-#li-container__li-thumbnail-osnkop2 {
-    background-image: url("/img/oshi-no-ko-s2.jpg");
-}
-
-#li-container__li-thumbnail-jjkop3 {
-    background-image: url("/img/jujutsu-kaisen-op3.jpg");
-}
-
-#li-container__li-thumbnail-jjkop1 {
-    background-image: url("/img/jujutsu-kaisen-op1.png");
-}
-
-#li-container__li-thumbnail-nagatoroop1{
-    background-image: url("/img/nagatoro-s1.jpg");
-}
-
-#li-container__li-thumbnail-jjkop4{
-    background-image: url("/img/jujutsu-kaisen-op4.jpeg");
-}
-
-#li-container__li-thumbnail-jojoop9{
-    background-image: url("/img/jojo-op9.jpg");
-}
-
-#li-container__li-thumbnail-jojoop10{
-    background-image: url("/img/jojo-op10.jpg");
-}
-
-#li-container__li-thumbnail-jojoop11{
-    background-image: url("/img/jojo-op11.webp");
-}
-
-#li-container__li-thumbnail-btrop1{
-    background-image: url("/img/bocchi-the-rock.avif");
-}
-
-#li-container__li-thumbnail-dbzop1{
-    background-image: url("/img/dragon-ball-z-op1.jpg");
-}
-
-#li-container__li-thumbnail-kaguyasamaop1{
-    background-image: url("/img/kaguya-sama-s1.jpg");
-}
-
-#li-container__li-thumbnail-nagatoroop2{
-    background-image: url("/img/nagatoro-s2.jpg");
-}
-
-#li-container__li-thumbnail-dnop2{
-    background-image: url("/img/death-note-op2.jpg");
-}
-
-#li-container__li-thumbnail-kaguyasamaop2{
-    background-image: url("/img/kaguya-sama-s2.jpg");
-}
-
-#li-container__li-thumbnail-dnop1{
-    background-image: url("/img/death-note-op1.jpg");
-}
-
-#li-container__li-thumbnail-dbzop2{
-    background-image: url("/img/dragon-ball-z-op2.jpg");
-}
-
-#li-container__li-thumbnail-dbop{
-    background-image: url("/img/dragon-ball.jpg");
-}
-
-#li-container__li-thumbnail-cmop{
-    background-image: url("/img/chainsaw-man.jpg");
-}
-
-#li-container__li-thumbnail-sxfop1{
-    background-image: url("/img/spy-x-family-op1.jpg");
-}
-
-#li-container__li-thumbnail-komisanop2{
-    background-image: url("/img/komi-san-s2.jpg");
-}
-
-#li-container__li-thumbnail-konop1{
-    background-image: url("/img/k-on-op1.jpg");
-}
-
-#li-container__li-thumbnail-gochiusaop1{
-    background-image: url("/img/gochiusa-s1.jpg");
-}
-
-#li-container__li-thumbnail-gochiusaop2{
-    background-image: url("/img/gochiusa-s2.jpg");
-}
-
-#li-container__li-thumbnail-coteop3{
-    background-image: url("/img/cote-s3.png");
-}
-
-#li-container__li-thumbnail-coteop1{
-    background-image: url("/img/cote-s1.jpg");
-}
-
-#li-container__li-thumbnail-blendsop{
-    background-image: url("/img/blend-s.avif");
-}
-
-#li-container__li-thumbnail-inoubattleop{
-    background-image: url("/img/inou-battle.png");
-}
-
-#li-container__li-thumbnail-quintupletsop{
-    background-image: url("/img/quintuplets-s1.jpeg");
-}
-
-#li-container__li-thumbnail-gnjop{
-    background-image: url("/img/genjitsu-no-yohanejpg.jpg");
-}
-
-#li-container__li-thumbnail-quintupletsop2{
-    background-image: url("/img/quintuplets-s2.jpg");
-}
-
-#li-container__li-thumbnail-llnop2{
-    background-image: url("/img/love-live-nijigasaki-season2.webp");
-}
-
-#li-container__li-thumbnail-ragop1{
-    background-image: url("/img/rent-a-girlfriend-s1.jpg");
-}
-
-#li-container__li-thumbnail-kakeguruiop1{
-    background-image: url("/img/kakegurui-s1.png");
-}
-
-#li-container__li-thumbnail-kakeguruiop2{
-    background-image: url("/img/kakegurui-s2.jpg");
-}
-
-#li-container__li-thumbnail-jojoop6{
-    background-image: url("/img/jojo-op6.jpg");
-}
-
-#li-container__li-thumbnail-bakemonogatariop5{
-    background-image: url("/img/bakemonogatari-op5.jpg");
-}
-
-#li-container__li-thumbnail-msdimeop{
-    background-image: url("/img/my-stepmom-daughter-is-my-ex.avif");
-}
-
-#li-container__li-thumbnail-mssop3{
-    background-image: url("/img/monogatari-second-season-op3.avif");
-}
-
-#li-container__li-thumbnail-ahhfirop{
-    background-image: url("/img/alya-hides-her-feelings-in-russian.avif");
-}
-
-#li-container__li-thumbnail-quintupletsop3 {
-    background-image: url("/img/quintupletsova.webp");
-}
-
-#li-container__li-thumbnail-ragop2{
-    background-image: url("/img/rent-a-girlfriend-s2.webp");
-}
-
-#li-container__li-thumbnail-ragop3{
-    background-image: url("/img/rent-a-girlfriend-s3.webp");
-}
-
-#li-container__li-thumbnail-coteop2{
-    background-image: url("/img/cote-s2.jpg");
-}
-
-#li-container__li-thumbnail-jojoop1{
-    background-image: url("/img/jojo-op1.jpg");
-}
-
-#li-container__li-thumbnail-swoop{
-    background-image: url("/img/senpai-wa-otakonoko.avif");
-}
-
-#li-container__li-thumbnail-jojoop2{
-    background-image: url("/img/jojo-op2.jpg");
-}
-
-#li-container__li-thumbnail-watamoteop{
-    background-image: url("/img/watamote.jpe");
-}
-
-#li-container__li-thumbnail-uzakichanop2{
-    background-image: url("/img/uzaki-chan-s2.png");
-}
-
-#li-container__li-thumbnail-jojoop3{
-    background-image: url("/img/jojo-op3.jpg");
-}
-
-#li-container__li-thumbnail-jojoop4{
-    background-image: url("/img/jojo-op4.jpg");
-}
-
-#li-container__li-thumbnail-jojoop8{
-    background-image: url("/img/jojo-op8.webp");
-}
-
-#li-container__li-thumbnail-bakemonogatariop4{
-    background-image: url("/img/bakemonogatari-op4.jpg");
-}
-
-#li-container__li-thumbnail-bgsop{
-    background-image: url("/img/bunny-girl-senpai.jpg");
-}
-
-#li-container__li-thumbnail-llssop1{
-    background-image: url("/img/love-live-superstar-s1.jpg");
-}
-
-#li-container__li-thumbnail-jojoop5{
-    background-image: url("/img/jojo-op5.png");
-}
-
-#li-container__li-thumbnail-dandadanop{
-    background-image: url("/img/dandadan.webp");
-}
-
-#li-container__li-thumbnail-uzakichanop1{
-    background-image: url("/img/uzaki-chan-s1.jpg");
-}
-
-#li-container__li-thumbnail-jojoop7{
-    background-image: url("/img/jojo-op7.jpg");
-}
-
-#li-container__li-thumbnail-bluelockop3{
-    background-image: url("/img/blue-lock-op3.webp");
-}
-
-#li-container__li-thumbnail-bakemonogatariop2{
-    background-image: url("/img/bakemonogatari-op2.jpg");
-}
-
-#li-container__li-thumbnail-nisemonogatariop3{
-    background-image: url("/img/nisemonogatari-op3.jpg");
-}
-
-#li-container__li-thumbnail-newgameop1{
-    background-image: url("/img/new-game-s1.jpg");
-}
-
-#li-container__li-thumbnail-llssop2{
-    background-image: url("/img/love-live-superstar-s2.jpeg");
-}
-
-#li-container__li-thumbnail-newgameop2{
-    background-image: url("/img/new-game-s2.jpg");
-}
-
-#li-container__li-thumbnail-mssop4{
-    background-image: url("/img/monogatari-second-season-op4.jpeg");
-}
-
-#li-container__li-thumbnail-msoop1{
-    background-image: url("/img/monogatari-series-off-and-monster-season-op1.png");
-}
-
-#li-container__li-thumbnail-owarimonogatariop1{
-    background-image: url("/img/owarimonogatari-op1.jpeg");
-}
-
-#li-container__li-thumbnail-owarimonogatariop2{
-    background-image: url("/img/owarimonogatari-op2.jpg");
-}
-
-#li-container__li-thumbnail-llssop3{
-    background-image: url("/img/love-live-superstar-s3.webp");
-}
-
-#li-container__li-thumbnail-ykatswop{
-    background-image: url("/img/yamada-kun-and-the-seven-witches.jpe");
-}
-
-#li-container__li-thumbnail-abpop{
-    background-image: url("/img/amagi-brilliant-park.png");
-}
-
-#li-container__li-thumbnail-kgfwoop{
-    background-image: url("/img/kanojo-ga-flag-wo-oraretara.avif");
-}
-
-#li-container__li-thumbnail-hanamonogatariop{
-    background-image: url("/img/hanamonogatari-op.jpg");
-}
-
-#li-container__li-thumbnail-mssop1{
-    background-image: url("/img/monogatari-second-season-op1.jpg");
-}
-
-#li-container__li-thumbnail-bakemonogatariop3{
-    background-image: url("/img/bakemonogatari-op3.jpg");
-}
-
-#li-container__li-thumbnail-kcop1{
-    background-image: url("/img/kokoro-connect-s1.jpg");
-}
-
-#li-container__li-thumbnail-jjkop2{
-    background-image: url("/img/jujutsu-kaisen-op2.jpg");
-}
-
-#li-container__li-thumbnail-hitoribocchiop{   
-    background-image: url("/img/hitori-bocchi.avif");
-}
-
-#li-container__li-thumbnail-konop2{
-    background-image: url("/img/k-on-op2.jpg");
-}
-
-#li-container__li-thumbnail-komisanop1{
-    background-image: url("/img/komi-san-s1.jpg");
-}
-
-#li-container__li-thumbnail-bluelockop1{
-    background-image: url("/img/blue-lock-op1.jpg");
-}
-
-#li-container__li-thumbnail-bluelockop2{
-    background-image: url("/img/blue-lock-op2.jpg");
-}
-
-#li-container__li-thumbnail-sxfop2{
-    background-image: url("/img/spy-x-family-op2.jpg");
-}
-
-#li-container__li-thumbnail-gochiusaop3 {
-    background-image: url("/img/gochiusa-s3.jpg");
-}
-
-#li-container__li-thumbnail-kaguyasamaop3{
-    background-image: url("/img/kaguya-sama-s3.jpg");
-}
-
-#li-container__li-thumbnail-dbsop1{
-    background-image: url("/img/dragon-ball-super-op1.avif");
-}
-
-#li-container__li-thumbnail-llnop1{
-    background-image: url("/img/love-live-nijigasaki-s1.jpg");
-}
-
-#li-container__li-thumbnail-citrusop{
-    background-image: url("/img/citrus.jpg");
-}
-
-#li-container__li-thumbnail-dbzkop1{
-    background-image: url("/img/dragon-ball-z-kai-op1.jpg");
-}
-
-#li-container__li-thumbnail-sxfop3{
-    background-image: url("/img/spy-x-family-op3.jpg");
-}
-
-#li-container__li-thumbnail-konop3{
-    background-image: url("/img/k-on-op3.avif");
-}
-
-#li-container__li-thumbnail-llsipop1{
-    background-image: url("/img/love-live-sip-s1.jpe");
-}
-
-#li-container__li-thumbnail-llsipop2{
-    background-image: url("/img/love-live-sip-s2.jpg");
-}
-
-#li-container__li-thumbnail-llsop2{
-    background-image: url("/img/love-live-sunshine-s2.jpg");
-}
-
-#li-container__li-thumbnail-shikanoko{
-    background-image: url("/img/shikanoko.webp");
-}
-
-#li-container__li-thumbnail-sbdop{
-    background-image: url("/img/sono-bisque-doll.png");
-}
-
-#li-container__li-thumbnail-kaguyasamaop4{
-    background-image: url("/img/kaguya-sama-op4.jpg");
-}
-
-#li-container__li-thumbnail-nisemonogatariop2{
-    background-image: url("/img/nisemonogatari-op2.jpg");
-}
-
-#li-container__li-thumbnail-owarimonogatari2ndseasonop1{
-    background-image: url("/img/owarimonogatari2ndseason-op1.jpg");
-}
-
-
-#li-container__li-thumbnail-tsukimonogatariop{
-    background-image: url("/img/tsukimonogatari-op.png");
-}
-
-#li-container__li-thumbnail-owarimonogatari2ndseasonop2{
-    background-image: url("/img/owarimonogatari2ndseason-op2.jpg");
-}
-
-#li-container__li-thumbnail-msoop2{
-    background-image: url("/img/monogatari-series-off-and-monster-season-op2.webp");
-}
-
-#li-container__li-thumbnail-zokuowarimonogatariop{
-    background-image: url("/img/zoku-owarimonogatari-op.jpeg");
-}
-
-#li-container__li-thumbnail-mssop2{
-    background-image: url("/img/monogatari-second-season-op2.jpg");
-}
-
-#li-container__li-thumbnail-dbdaima{
-    background-image: url("/img/dragon-ball-daima.jpg");
-}
-
-#li-container__li-thumbnail-monsterop{
-    background-image: url("/img/monster.jpg");
-}
-
-#li-container__li-thumbnail-nisemonogatariop1{
-    background-image: url("/img/nisemonogatari-op1.jpg");
-}
-
-#li-container__li-thumbnail-bakemonogatariop1{
-    background-image: url("/img/bakemonogatari-op1.jpg");
-}
-
-#li-container__li-thumbnail-owarimonogatariop3{
-    background-image: url("/img/owarimonogatari-op3.jpg");
-}
-
-#li-container__li-thumbnail-nekomonogatarikuroop{
-    background-image: url("/img/nekomonogatari.jpe");
-}
-
-#li-container__li-thumbnail-kakeguruitwinop{
-    background-image: url("/img/kakegurui-twin.jpg");
-}
-
-#li-container__li-thumbnail-dbsop2{
-    background-image: url("/img/dragon-ball-super-op2.avif");
-}
-
-#li-container__li-thumbnail-kcop2{
-    background-image: url("/img/kokoro-connect-op2.jpg");
-}
 
 /*THUMBNAILS IMAGE ENDS */
 
@@ -685,6 +235,7 @@ img {
     background-color: #171921;
     margin-bottom: 0;
     box-shadow: 0 0 15px 0 #171921;
+
 }
 
 /*FOOTER ENDS */
@@ -753,9 +304,16 @@ img {
     width: 100%;
 }
 
+
 .form__input {
     padding: 10px;
     flex-grow: 0.5;
+}
+
+.form__input-pos {
+    padding: 10px;
+    flex-grow: 0.25;
+    width: 25%;
 }
 
 .form__input-image {
@@ -801,6 +359,13 @@ img {
     background-color: #fff;
     box-shadow: none;
     color: #0881c6;
+}
+
+.form__final-container {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+
 }
 
 .modal-message-container {
@@ -929,6 +494,19 @@ img {
 
     .form__input-image {
         padding: 0px 12.5px;
+    }
+
+    .form__final-container {
+        width: 80%;
+        gap: 0;
+    }
+
+    .form__input-pos {
+        width: 100%;
+    }
+
+    .form__input-submit {
+        flex-grow: 0.35;
     }
 
 }

@@ -23,13 +23,19 @@
                         <a href="/index/index.html"  class="li-item__link" aria-label="Link that redirects to the main web">Woodlist.com</a>
                     </li>
                     <li class="list__li-item"> 
-                        <a href="user-area.html" class="li-item__link" aria-label="Link that redirects to user area">Woodlists User Area</a>
+                        <a href="user-area.html" class="li-item__link" aria-label="Link that redirects to user area" id="userArea">Woodlists User Area</a>
                     </li>
                     <li class="list__li-item">
-                        <a href="/main-list/main-list.html" class="li-item__link" aria-label="Link that redirects to the main anime list">Anime Openings Main List</a>
+                        <a href="/main-list/main-list.html" class="li-item__link" aria-label="Link that redirects to the main anime list" id="mainList">Anime Openings Main List</a>
                     </li> 
             </ul> 
         </nav>
+        <div class="header__language">
+            <select name="" id="language">
+                <option value="EN">EN</option>
+                <option value="ES">ES</option>
+            </select>
+        </div>
     </header>
     <main class="container">
         <div id="container__login-header">
@@ -37,32 +43,33 @@
         </div>
         <div class="container__login-main">
             <div class="container__login-container">
-                <h2 aria-label="Secondary Title" class="login-container__secondary-title">Login</h2>
-                <p class="login-container__text">Log in to an existing Woodlists account. You have 3 login attempts by 30 minutes. If you do not have an account yet, register on the right or below.</p>
+                <h2 aria-label="Secondary Title" class="login-container__secondary-title" id="loginHeader">Login</h2>
+                <p class="login-container__text" id="loginText">Log in to an existing Woodlists account. You have 3 login attempts by 30 minutes. If you do not have an account yet, register on the right or below.</p>
                 <form class="container__form">
-                    <label for="form__login-username" class="form__label">Username:</label>
+                    <label for="form__login-username" class="form__label" id="loginUsername">Username:</label>
                     <input type="text" required name="login-username" minlength="3" class="form__input" id="form__login-username" aria-label="Write your current username">
-                    <label for="form__login-password" class="form__label">Password:</label>
+                    <label for="form__login-password" class="form__label" id="loginPassword">Password:</label>
                     <input type="password" required name="login-password" minlength="10" class="form__input" id="form__login-password" aria-label="Write your current password">
-                    <input type="submit" value="Log In" class="form__button" aria-label="Button for Log In">
+                    <input type="submit" value="Log In" class="form__button" aria-label="Button for Log In" id="loginButton">
                 </form>
             </div>
         
             <div class="container__login-container">
-                <h2 aria-label="Secondary Title"  class="login-container__secondary-title">Register</h2>
-                <p class="login-container__text">Not registered yet? Create a new Woodlists account below.</p>
+                <h2 aria-label="Secondary Title"  class="login-container__secondary-title" id="registerHeader">Register</h2>
+                <p class="login-container__text" id="registerText">Not registered yet? Create a new Woodlists account below.</p>
                 <form class="container__form">
-                    <label for="form__register-username" class="form__label">Username:</label>
+                    <label for="form__register-username" class="form__label" id="registerUsername">Username:</label>
                     <input type="text" required name="register-username" minlength="3" class="form__input" id="form__register-username" aria-label="Write your new username">
-                    <label for="form__register-password" class="form__label">Password:</label>
+                    <label for="form__register-password" class="form__label" id="registerPassword">Password:</label>
                     <input type="password" required name="register-password" minlength="10" class="form__input" id="form__register-password" aria-label="Write your new password">
-                    <label for="form__register-password_confirmation" class="form__label">Repeat Password:</label>
+                    <label for="form__register-password_confirmation" class="form__label" id="registerRepeatPassword">Repeat Password:</label>
                     <input type="password" required name="register-password_confirmation" minlength="10" class="form__input" id="form__register-password_confirmation" aria-label="Write your new password again">
-                    <input type="submit" value="Register" class="form__button" aria-label="Button for Register">
+                    <input type="submit" value="Register" class="form__button" aria-label="Button for Register" id="registerButton">
                 </form>
             </div>
         </div>
     </main>
     <footer class="footer"></footer>
+    <script src="changeLanguage.js"></script>
 </body>
 </html>

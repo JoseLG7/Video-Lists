@@ -24,13 +24,20 @@
                         <a href="index.html"  class="li-item__link" aria-label="Link that redirects to the main web">Woodlist.com</a>
                     </li>
                     <li class="list__li-item"> 
-                        <a href="/user-area/user-area.html" class="li-item__link" aria-label="Link that redirects to user area">Woodlists User Area</a>
+                        <a href="/user-area/user-area.html" class="li-item__link" aria-label="Link that redirects to user area" id="userArea">Woodlists User Area</a>
                     </li>
                     <li class="list__li-item">
-                        <a href="/main-list/main-list.html" class="li-item__link" aria-label="Link that redirects to the main anime list">Anime Openings Main List</a>
+                        <a href="/main-list/main-list.html" class="li-item__link" aria-label="Link that redirects to the main anime list" id="mainList">Anime Openings Main List</a>
                     </li> 
             </ul> 
+            
         </nav>
+        <div class="header__language">
+            <select name="" id="language">
+                <option value="EN">EN</option>
+                <option value="ES">ES</option>
+            </select>
+        </div>
     </header>
     <main class="main">
         <div class="main__description">
@@ -42,7 +49,7 @@
         </div>
         <div class="main__button-section">
             <button class="button-section__button">
-                <a href="main-list.html" id="button-section__button-list" aria-label="Link that redirects to the main anime list">Go to main list</a>
+                <a href="/main-list/main-list.html" id="button-section__button-list" aria-label="Link that redirects to the main anime list">Go to main list</a>
                 <span class="material-symbols-outlined" id="button-section__icon">chevron_right</span>
             </button>
         </div>
@@ -82,5 +89,6 @@
         </div>
     </main>
     <footer class="footer"></footer>
+    <script src="changeLanguage.js"></script>
 </body>
 </html>
