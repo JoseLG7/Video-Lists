@@ -702,6 +702,11 @@ img {
     align-items: center;
 }
 
+.modal-container-active {
+    display: flex;
+    animation: fadeIn 0.4s forwards;
+}
+
 .modal {
     position: relative;
     z-index: 21;
@@ -796,6 +801,22 @@ img {
     background-color: #fff;
     box-shadow: none;
     color: #0881c6;
+}
+
+.modal-message-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.modal-correct-message {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    height: 5%;
+    background-color: green;
+    position: relative;
+    top: 95%
 }
 
 /*MODAL ENDS*/
@@ -913,3 +934,17 @@ img {
 }
 
 /*MODAL QUERIES SMALL RESOLUTION ENDS*/
+
+/*MODAL ANIMATIONS*/
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    } to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*MODAL ANIMATIONS ENDS*/

@@ -47,21 +47,34 @@ function addVideoToList(link,image,title) {
 
 }
 
+const image = document.getElementById("image");
+image.onchange= function () {
+  // Cambiamos el texto del label por el nombre del archivo seleccionado
+    const label = document.querySelector('label[for="image"]');
+    label.innerText = this.files[0].name;
+};
+
 const inputTitle = document.getElementById("title");
 const inputLink = document.getElementById("link");
 const inputImage = document.getElementById("image");
 
 const submitButton = document.querySelector(".form__input-submit");
 
+const modalCorrectlyMessage = document.querySelector(".modal-correct-message");
+const showCorrectlyMessage = ()=>{
+    modalCorrectlyMessage.style.display="flex";
+}
+
+
+
 const uploadData=(e)=>{
     e.preventDefault();
     const file = inputImage.files[0]; 
-    console.log(file)
     // 2. Creamos una URL temporal que el navegador sí entienda
-    const imageURL = URL.createObjectURL(file);
-    console.log(imageUrl)
-    addVideoToList(inputLink.value,inputImage.value,imageURL);
+    const imageUrl = URL.createObjectURL(file);
 
+    addVideoToList(inputLink.value,imageUrl,inputTitle.value);
+    showCorrectlyMessage();
 }
 
 submitButton.addEventListener("click",uploadData);
@@ -74,7 +87,8 @@ const modalContainer = document.querySelector(".modal-container");
 
 const openModal=(e)=>{
     e.preventDefault();
-    modalContainer.style.display="flex";
+    //modalContainer.style.display="flex";
+    modalContainer.classList.add("modal-container-active");
 }
 
 const addButton = document.querySelector(".aside__button");
@@ -86,7 +100,8 @@ addButton.addEventListener("click",openModal);
 const closeButton = document.querySelector(".close-button");
 
 const closeModal=()=>{
-    modalContainer.style.display="none";
+    modalContainer.classList.remove("modal-container-active");
+    //modalContainer.style.display="none";
 }
 
 closeButton.addEventListener("click",closeModal);
