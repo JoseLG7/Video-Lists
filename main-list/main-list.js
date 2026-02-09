@@ -91,4 +91,63 @@ const closeModal=()=>{
 
 closeButton.addEventListener("click",closeModal);
 
+//editVideo
+
+const edit = document.querySelector(".edit");
+const liContainer = document.getElementById("liContainer");
+const thumbnail = document.getElementById("li-container__li-thumbnail-osnkop1");
+const liText = document.getElementById("liText");
+const iconsContainer = document.querySelector(".li-container__icons")
+
+edit.addEventListener("click",()=>{
+
+
+    iconsContainer.style.display = "none"
+
+    const dimmer = document.createElement("DIV");
+    dimmer.classList.add("thumbnail-dimmer");
+
+    const link = thumbnail.firstElementChild;
+    const upload = document.createElement("SPAN");
+    upload.classList.add("material-symbols-outlined", "edit-icon-overlay");
+    upload.textContent = "edit";
+
+    thumbnail.removeChild(link);
+    thumbnail.appendChild(dimmer);
+    thumbnail.appendChild(upload);
+    thumbnail.style.setProperty('--hover-opacity', '1');
+
+    let title = liText.firstElementChild.textContent;
+    liText.firstElementChild.textContent =  title.slice(4,title.length);
+    liText.setAttribute("contenteditable","true");
+
+    const buttons = document.createElement("DIV");
+    buttons.classList.add("edit-buttons-container");
+
+    const textPos = document.createTextNode("Pos:");
+
+    const posInput = document.createElement("INPUT");
+    posInput.setAttribute("type","number");
+    posInput.classList.add("edit-buttons-input")
+
+    const saveButton = document.createElement("BUTTON");
+    saveButton.classList.add("edit-buttons-buttons");
+    saveButton.classList.add("edit-buttons-save");
+    saveButton.textContent = "Save";
+
+    const cancelButton = document.createElement("BUTTON");
+    cancelButton.classList.add("edit-buttons-buttons");
+    cancelButton.classList.add("edit-buttons-cancel")
+    cancelButton.textContent = "Cancel";
+
+    buttons.appendChild(textPos);
+    buttons.appendChild(posInput);
+    buttons.appendChild(saveButton);
+    buttons.appendChild(cancelButton);
+
+    liContainer.appendChild(buttons);
+
+
+})
+
 
