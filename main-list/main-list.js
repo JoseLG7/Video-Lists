@@ -102,7 +102,16 @@ const iconsContainer = document.querySelector(".li-container__icons")
 edit.addEventListener("click",()=>{
 
 
-    iconsContainer.style.display = "none"
+    iconsContainer.style.display = "none";
+
+    const changeLink = document.createElement("DIV");
+    const changeLinkText = document.createTextNode("Link: ");
+    const linkInput = document.createElement("INPUT");
+    linkInput.classList.add("edit-buttons-input-link")
+
+    changeLink.appendChild(changeLinkText);
+    changeLink.appendChild(linkInput);
+
 
     const dimmer = document.createElement("DIV");
     dimmer.classList.add("thumbnail-dimmer");
@@ -115,6 +124,7 @@ edit.addEventListener("click",()=>{
     thumbnail.removeChild(link);
     thumbnail.appendChild(dimmer);
     thumbnail.appendChild(upload);
+    thumbnail.appendChild(changeLink);
     thumbnail.style.setProperty('--hover-opacity', '1');
 
     let title = liText.firstElementChild.textContent;
@@ -123,6 +133,9 @@ edit.addEventListener("click",()=>{
 
     const buttons = document.createElement("DIV");
     buttons.classList.add("edit-buttons-container");
+
+
+
 
     const textPos = document.createTextNode("Pos:");
 
@@ -144,6 +157,7 @@ edit.addEventListener("click",()=>{
     buttons.appendChild(posInput);
     buttons.appendChild(saveButton);
     buttons.appendChild(cancelButton);
+
 
     liContainer.appendChild(buttons);
 
