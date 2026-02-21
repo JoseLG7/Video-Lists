@@ -14,6 +14,12 @@ const changeToSpanish = ()=>{
     const modalAddButton = document.querySelector(".form__input-submit");
     const modalPosition = document.getElementById("modalPos");
     const label = document.querySelector('label[for="image"]');
+    const deleteConfirmText = document.getElementById("confirmText");
+    const deleteConfirmAction = document.getElementById("confirmAction");
+    const deleteBtnYes = document.getElementById("btnYes");
+    const deleteBtnNo = document.getElementById("btnNo");
+    const titleSearch = document.getElementById("titleSearch");
+    const positionSearch = document.getElementById("positionSearch");
 
 
     userArea.textContent = "Area de Usuarios";
@@ -26,6 +32,12 @@ const changeToSpanish = ()=>{
     modalAddButton.value = "Agregar";
     modalPosition.firstChild.textContent = "Pos:"
     label.innerText = "Seleccionar Archivo";
+    deleteConfirmAction.innerText = "Confirmar Acción";
+    deleteConfirmText.innerText = "¿Estás seguro de borrar este video de la lista?";
+    deleteBtnYes.innerText = "Si, Borrar";
+    deleteBtnNo.innerText = "No, Cancelar";
+    titleSearch.textContent = "Buscar por titúlo";
+    positionSearch.textContent = "Buscar por posición:"
 
 }
 
@@ -40,6 +52,13 @@ const changeToEnglish = ()=>{
     const modalAddButton = document.querySelector(".form__input-submit");
     const modalPosition = document.getElementById("modalPos");
     const label = document.querySelector('label[for="image"]');
+    const deleteConfirmAction = document.getElementById("confirmAction");
+    const deleteConfirmText = document.getElementById("confirmText");
+    const deleteBtnYes = document.getElementById("btnYes");
+    const deleteBtnNo = document.getElementById("btnNo");
+    const titleSearch = document.getElementById("titleSearch");
+    const positionSearch = document.getElementById("positionSearch");
+
 
 
     userArea.textContent = "Woodlists User Area";
@@ -52,6 +71,12 @@ const changeToEnglish = ()=>{
     modalAddButton.value = "Add";
     modalPosition.firstChild.textContent = "Pos:"
     label.innerText = "Select File";
+    deleteConfirmAction.innerText = "Confirm Action";
+    deleteConfirmText.innerText = "Are you sure to remove this video from the list?";
+    deleteBtnYes.innerText = "Yes, Delete";
+    deleteBtnNo.innerText = "No, Cancel";
+    titleSearch.textContent = "Search by title:";
+    positionSearch.textContent = "Search by position:"
 
 }
 

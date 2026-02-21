@@ -3,13 +3,21 @@
 
 // CRUD IndexedDB
 
-const IDBRequest = indexedDB.open("list","1");
+const IDBRequest = indexedDB.open("list","2");
 
 IDBRequest.addEventListener("upgradeneeded",()=>{
     const db = IDBRequest.result;
-    db.createObjectStore("videos",{
-        autoIncrement: true
-    });
+    let store;
+
+    if (!db.objectStoreNames.contains("videos")) {
+        store = db.createObjectStore("videos", { autoIncrement: true });
+    } else {
+        store = IDBRequest.transaction.objectStore("videos");
+    }
+    
+    if (!store.indexNames.contains("search_title")) {
+        store.createIndex("search_title", "title", { unique: false });
+    }
 });
 
 IDBRequest.addEventListener("success",()=>{
@@ -37,91 +45,208 @@ const addObject = (object)=>{
     IDBData.add(object);
 }
 
-const modifyObject = (key,object)=>{
-    const IDBData = getIDBData("readwrite","objeto modificado correctamente");
-    IDBData.put(object,key);
+const modifyObject = (key, object) => {
+    return new Promise((resolve, reject) => {
+        const db = IDBRequest.result;
+        const transaction = db.transaction("videos", "readwrite");
+        const store = transaction.objectStore("videos");
+        
+        const request = store.put(object, key);
+
+        transaction.oncomplete = () => {
+            console.log("Objeto modificado correctamente en la DB");
+            resolve(); 
+        };
+
+        transaction.onerror = (error) => {
+            console.error("Error al modificar:", error);
+            reject(error);
+        };
+    });
 }
 
 const addObjectAfterShift = (data) => {
-    const db = IDBRequest.result;
-    const transaction = db.transaction("videos", "readwrite");
-    const objectStore = transaction.objectStore("videos");
-    
+        return new Promise((resolve,reject) => {
+        const db = IDBRequest.result;
+        const transaction = db.transaction("videos", "readwrite");
+        const objectStore = transaction.objectStore("videos");
+        
 
-    data.pos = parseInt(data.pos); 
-    
-    objectStore.add(data);
-    
-    transaction.oncomplete = () => {
-        console.log("Video agregado correctamente");
-        readObjects(); 
-        showCorrectlyMessage();
-    }
+        data.pos = parseInt(data.pos); 
+        
+        objectStore.add(data);
+        
+        transaction.oncomplete = () => {
+            console.log("Video agregado correctamente");
+            readObjects(); 
+            showCorrectlyMessage();
+            resolve();
+    };
+    transaction.onerror = () => {
+            console.error("Error al agregar el objeto");
+            reject(transaction.error); // 👈 Avisamos del error
+        };
+    });
+
 }
 
 const shiftPositionsAndAdd = (newVideoData) => {
-    const db = IDBRequest.result;
-    const transaction = db.transaction("videos", "readwrite");
-    const objectStore = transaction.objectStore("videos");
-    const targetPos = parseInt(newVideoData.pos); 
+    return new Promise((resolve, reject) => {
+        const db = IDBRequest.result;
+        const transaction = db.transaction("videos", "readwrite");
+        const objectStore = transaction.objectStore("videos");
+        const targetPos = parseInt(newVideoData.pos);
 
-    
-    const cursorRequest = objectStore.openCursor();
+        const cursorRequest = objectStore.openCursor();
 
-    cursorRequest.onsuccess = (e) => {
-        const cursor = e.target.result;
-        if (cursor) {
-            const video = cursor.value;
-            if (video.pos >= targetPos) {
-                video.pos += 1; 
-                cursor.update(video); 
+        cursorRequest.onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+                const video = cursor.value;
+                if (video.pos >= targetPos) {
+                    video.pos += 1;
+                    cursor.update(video);
+                }
+                cursor.continue();
             }
-            cursor.continue();
-        }
-    };
+        };
 
-    transaction.oncomplete = () => {
-        console.log("Espacio liberado. Agregando nuevo video...");
-        addObjectAfterShift(newVideoData);
-    };
-    
-    transaction.onerror = () => console.log("Error al desplazar elementos");
+        transaction.oncomplete = async () => {
+            console.log("Espacio liberado. Agregando nuevo video...");
+            try {
+                await addObjectAfterShift(newVideoData); 
+                resolve();
+            } catch (err) {
+                reject(err);
+            }
+        };
+
+        transaction.onerror = () => reject(transaction.error);
+    });
 };
 
-const readObjects = ()=>{
+const reorderVideos = (key, oldPos, newPos) => {
+    return new Promise((resolve, reject) => {
+        const db = IDBRequest.result;
+        const transaction = db.transaction("videos", "readwrite");
+        const store = transaction.objectStore("videos");
+
+        oldPos = parseInt(oldPos);
+        newPos = parseInt(newPos);
+
+        const cursorRequest = store.openCursor();
+
+        cursorRequest.onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+                const video = cursor.value;
+                let updateNeeded = false;
+
+                if (video.idDB === key) { 
+                    video.pos = newPos;
+                    updateNeeded = true;
+                }
+                
+
+                else if (oldPos < newPos) {
+                    if (video.pos > oldPos && video.pos <= newPos) {
+                        video.pos -= 1;
+                        updateNeeded = true;
+                    }
+                }
+
+                else if (oldPos > newPos) {
+                    if (video.pos >= newPos && video.pos < oldPos) {
+                        video.pos += 1;
+                        updateNeeded = true;
+                    }
+                }
+
+                if (updateNeeded) {
+                    cursor.update(video);
+                }
+                
+                cursor.continue();
+            }
+        };
+
+        transaction.oncomplete = () => {
+            console.log("Reordenamiento completado");
+            resolve();
+        };
+
+        transaction.onerror = (err) => reject(err);
+    });
+};
+
+
+const readObjects = (focusKey = null)=>{
     const IDBData = getIDBData("readonly");
     const cursor = IDBData.openCursor();
     const fragment = document.createDocumentFragment();
     const list = document.querySelector(".list-container__list");
-    list.innerHTML="";
+
     let videoArray = [];
 
-    cursor.addEventListener("success",()=>{
-        if (cursor.result) {
-            videoArray.push(cursor.result.value);
-            cursor.result.continue();
+    cursor.addEventListener("success",(e)=>{
+        const cursor = e.target.result;
+
+        if (cursor) {
+            const currentKey = cursor.primaryKey;
+            const data = cursor.value;
+            videoArray.push({...data, keyDB: currentKey});
+            cursor.continue();
         } else {
             videoArray.sort((a,b)=> a.pos - b.pos);
 
             //create HTML elements
             videoArray.forEach(video => {
-                let imageUrl;
-                if (typeof video.image !== "string") {
-                    imageUrl = URL.createObjectURL(video.image);
-                } else imageUrl = video.image;
-                let listItem = addVideoToList(video.link, imageUrl, video.title, video.pos);
+                
+                let listItem = addVideoToList(video.link, video.image, video.title, video.pos,video.keyDB);
+                listItem.setAttribute("data-key", video.keyDB);
                 fragment.appendChild(listItem);
             })
+            list.innerHTML = "";
             list.appendChild(fragment);
+
+            if (focusKey) {
+                const targetElement = document.querySelector(`[data-key="${focusKey}"]`);
+
+                if (targetElement) {
+                    targetElement.scrollIntoView({ 
+                        behavior: "smooth", 
+                        block: "center" 
+                    });
+
+                    targetElement.classList.add("updated-flash");
+                    setTimeout(() => {
+                        targetElement.classList.remove("updated-flash");
+                    }, 1500);
+                }
+            }
         }
     });
-}
+};
 
-const deleteObject = (key)=>{
-    const IDBData = getIDBData("readwrite","objeto borrado correctamente");
-    IDBData.delete(key);
-}
+const deleteObject = (key) => {
+    return new Promise((resolve, reject) => {
+        const db = IDBRequest.result;
+        const transaction = db.transaction("videos", "readwrite");
+        const objectStore = transaction.objectStore("videos");
+        
+        objectStore.delete(key);
 
+        transaction.oncomplete = () => {
+            console.log("Objeto borrado correctamente");
+            resolve(); // Aquí el await se libera
+        };
+
+        transaction.onerror = () => {
+            console.error("Error al borrar");
+            reject(transaction.error);
+        };
+    });
+};
 
 const getListLength = () => {
     return new Promise((resolve, reject) => {
@@ -143,6 +268,84 @@ const getListLength = () => {
 };
 
 
+//Search IndexedDB
+
+const searchByTitle = (query) => {
+    const IDBData = getIDBData("readonly");
+    const cursorRequest = IDBData.openCursor();
+    const list = document.querySelector(".list-container__list");
+    
+    list.innerHTML = ""; 
+    
+    // Creamos un array para guardar los resultados temporalmente
+    const results = [];
+    
+    
+    cursorRequest.onsuccess = (e) => {
+        const cursor = e.target.result;
+        if (cursor) {
+            let lowerCaseTitle = cursor.value.title.toLowerCase();
+            if (lowerCaseTitle.includes(query)) {
+            results.push({
+                ...cursor.value,
+                key: cursor.primaryKey
+            });
+        }
+            cursor.continue();
+        } else {
+            if (results.length > 0) {
+                results.sort((a, b) => Number(a.pos) - Number(b.pos));
+
+                const fragment = document.createDocumentFragment();
+                
+                results.forEach(video => {
+                    const listItem = addVideoToList(
+                        video.link, 
+                        video.image, 
+                        video.title, 
+                        video.pos, 
+                        video.key
+                    );
+                    fragment.appendChild(listItem);
+                });
+
+                list.appendChild(fragment);
+            } else {
+                switch (language) {
+                    case "EN": list.innerHTML = `<p style='padding:20px; color: #555;'>No videos found with title: "${query}"</p>`;
+
+                        break;
+                    case "ES": list.innerHTML = `<p style='padding:20px; color: #555;'>No se encontró videos con ese titúlo: "${query}"</p>`;
+                        break;
+                }
+            }
+        }
+    };
+};
+
+
+const searchByPosition = (targetPos) => {
+    const IDBData = getIDBData("readonly");
+    const cursorRequest = IDBData.openCursor();
+    const list = document.querySelector(".list-container__list");
+    
+    list.innerHTML = "";
+
+    cursorRequest.onsuccess = (e) => {
+        const cursor = e.target.result;
+        if (cursor) {
+            if (Number(cursor.value.pos) === Number(targetPos)) {
+                const video = cursor.value;
+                const listItem = addVideoToList(video.link, video.image, video.title, video.pos, cursor.primaryKey);
+                list.appendChild(listItem);
+                return;
+            }
+            cursor.continue();
+        } else if (list.innerHTML === "") {
+            list.innerHTML = "<p style='padding:20px'>No video found in that position.</p>";
+        }
+    };
+};
 
 
 // Add a video
@@ -191,12 +394,18 @@ function createLiContainer(liContainer,liContainerImage,liContainerText) {
 }
 
 
-const addVideoToList = (link,image,title,pos)=> {
+const addVideoToList = (link,image,title,pos,key=null)=> {
     const a = document.createElement("A");
     createLink(a,link,title);
 
+
+    let imageUrl;
+
+    if (typeof image !== "string") imageUrl = URL.createObjectURL(image)
+    else imageUrl = image;
+
     const liContainerImage = document.createElement("DIV");
-    createImageContainer(image,a,liContainerImage);
+    createImageContainer(imageUrl,a,liContainerImage);
 
     const liContainerText = document.createElement("DIV");
     createTextContainer(liContainerText,title,pos);
@@ -204,8 +413,11 @@ const addVideoToList = (link,image,title,pos)=> {
     const liContainer = document.createElement("LI");
     createLiContainer(liContainer,liContainerImage,liContainerText);
 
-    const iconsContainer = liContainer.lastChild;
-    const editButton = iconsContainer.firstChild;
+    const iconsContainer = liContainer.lastElementChild;
+    const editButton = iconsContainer.firstElementChild;
+    const deleteButton = iconsContainer.lastElementChild;
+
+    
 
     //edit
 
@@ -213,7 +425,17 @@ const addVideoToList = (link,image,title,pos)=> {
 
         //liContainer edit
         const language = localStorage.getItem("language");
-        iconsContainer.style.display = "none"
+        iconsContainer.style.display = "none";
+
+        const changeLink = document.createElement("DIV");
+        const changeLinkText = document.createTextNode("Link: ");
+        const linkInput = document.createElement("INPUT");
+        linkInput.classList.add("edit-buttons-input-link");
+        linkInput.value = link;
+
+        changeLink.appendChild(changeLinkText);
+        changeLink.appendChild(linkInput);
+        changeLink.classList.add("change-link");
 
         const dimmer = document.createElement("DIV");
         dimmer.classList.add("thumbnail-dimmer");
@@ -222,20 +444,29 @@ const addVideoToList = (link,image,title,pos)=> {
         imageInput.setAttribute("type","file");
         imageInput.setAttribute("accept","image/*");
         imageInput.classList.add("edit-image");
+        imageInput.addEventListener("change",(e)=>{
+            const file = e.target.files[0];
+            if (file) {
+                const previewUrl = URL.createObjectURL(file);
+                liContainerImage.style.backgroundImage = `url("${previewUrl}")`;
+            }
+        })
 
-        const link = liContainerImage.firstElementChild;
+        const imageLink = liContainerImage.firstElementChild;
         const upload = document.createElement("SPAN");
         upload.classList.add("material-symbols-outlined", "edit-icon-overlay");
         upload.textContent = "edit";
 
-        liContainerImage.removeChild(link);
+        liContainerImage.removeChild(imageLink);
         liContainerImage.appendChild(dimmer);
         liContainerImage.appendChild(upload);
         liContainerImage.appendChild(imageInput);
+        liContainerImage.appendChild(changeLink);
         liContainerImage.style.setProperty('--hover-opacity', '1');
 
         let title = liContainerText.firstElementChild.textContent;
-        liContainerText.firstElementChild.textContent =  title.slice(4,title.length);
+        let posLength = pos.toString().length;
+        liContainerText.firstElementChild.textContent =  title.slice((3+posLength),title.length);
         liContainerText.setAttribute("contenteditable","true");
 
         const buttons = document.createElement("DIV");
@@ -245,7 +476,8 @@ const addVideoToList = (link,image,title,pos)=> {
 
         const posInput = document.createElement("INPUT");
         posInput.setAttribute("type","number");
-        posInput.classList.add("edit-buttons-input")
+        posInput.classList.add("edit-buttons-input");
+        posInput.value = pos;
 
         const saveButton = document.createElement("BUTTON");
         saveButton.classList.add("edit-buttons-buttons");
@@ -283,24 +515,92 @@ const addVideoToList = (link,image,title,pos)=> {
             liContainerText.setAttribute("contenteditable","false");
             liContainerText.firstElementChild.textContent =  title;
 
-            liContainerImage.appendChild(link);
+            liContainerImage.appendChild(imageLink);
             liContainerImage.removeChild(dimmer);
             liContainerImage.removeChild(upload);
             liContainerImage.removeChild(imageInput);
-            liContainerImage.style.setProperty('--hover-opacity', '0'); 
+            liContainerImage.removeChild(changeLink);
+            liContainerImage.style.setProperty('--hover-opacity', '0.7'); 
 
             iconsContainer.style.display = "flex";
 
+            let originalUrl
+            if (typeof image !== "string") {
+                originalUrl = URL.createObjectURL(image);
+            } else originalUrl = image;
+            liContainerImage.style.backgroundImage = `url("${originalUrl}")`;
+            imageInput.value = "";
+
         });
 
+        //saveButton event
+
         saveButton.addEventListener("click",async()=>{
+            let file = (imageInput.files.length > 0) ? imageInput.files[0] : image;
+
+
             const validationResult = await validateData(liContainerText.firstElementChild.textContent,
-                
+                linkInput.value, file, posInput.value
             );
+            if (validationResult.isValid) {
+
+                const modifiedVideo = {
+                    title: liContainerText.firstElementChild.textContent, 
+                    link: linkInput.value, 
+                    image: file, 
+                    pos: posInput.value
+                }
+
+                const newPos = parseInt(posInput.value);
+                const oldPos = parseInt(pos);
+
+                if (newPos === oldPos) {
+                    await modifyObject(key,modifiedVideo);
+                    if (imageInput.files.length > 0) {
+                        const newUrl = URL.createObjectURL(modifiedVideo.image);
+                        liContainerImage.style.backgroundImage = `url("${newUrl}")`;
+                        image = modifiedVideo.image;
+                    }
+
+                    a.href = modifiedVideo.link;
+                    link = modifiedVideo.link;
+
+                    title = `#${modifiedVideo.pos}- ${modifiedVideo.title}`;
+                    liContainerText.firstElementChild.textContent = title;
+
+                    liContainer.classList.add("updated-flash");
+                    setTimeout(() => {
+                        liContainer.classList.remove("updated-flash");
+                    }, 1500);
+
+
+
+                    cancelButton.click();
+                }
+                else {
+                    await reorderVideos(key, oldPos, newPos);
+                    await modifyObject(key, modifiedVideo);
+                    readObjects(key);
+                }
+
+                showCorrectlyMessage();
+
+                    
+            } else {showErrorMessage(validationResult.msg)
+                console.log(validationResult.msg);
+            };
         })
 
     });
-    
+
+    deleteButton.addEventListener("click", () => {
+        keyToDelete = key;
+        
+        modalContainer.classList.add("modal-container-active");
+
+        addVideoModal.style.display = "none";
+        modalConfirm.style.display = "block"; 
+    });
 
     return liContainer;
 
@@ -325,7 +625,8 @@ const submitButton = document.querySelector(".form__input-submit");
 
 const modalMessage = document.querySelector(".modal-message");
 const showCorrectlyMessage = ()=>{
-    modalMessage.style.backgroundColor = "green";
+    modalMessage.style.display = "flex";
+    modalMessage.style.backgroundColor = "#28a745";
     const language = localStorage.getItem("language");
         switch (language) {
         case "EN":  modalMessage.firstElementChild.textContent = "Upload Correctly";
@@ -334,11 +635,14 @@ const showCorrectlyMessage = ()=>{
             break;
     }
 
-    modalMessage.lastElementChild.textContent = "Done";
-    modalMessage.style.display="flex";
+    document.getElementById("modalIcon").textContent = "check_circle";
+    setTimeout(() => {
+        modalMessage.style.display = "none";
+    }, 2000);
 }
 
 const showErrorMessage = (msg)=>{
+    modalMessage.style.display="flex";
     modalMessage.style.backgroundColor = "red";
         const language = localStorage.getItem("language");
         switch (language) {
@@ -348,8 +652,29 @@ const showErrorMessage = (msg)=>{
             break;
     }
 
-    modalMessage.lastElementChild.textContent = "Error";
+    document.getElementById("modalIcon").textContent = "error";
+    setTimeout(() => {
+        modalMessage.style.display = "none";
+    }, 2000);
+
+}
+
+const showDeletedMessage = ()=>{
     modalMessage.style.display="flex";
+    modalMessage.style.backgroundColor = "#28a745";
+        const language = localStorage.getItem("language");
+        switch (language) {
+        case "EN": modalMessage.firstElementChild.textContent = `Deleted Correctly`;
+            break;
+        case "ES": modalMessage.firstElementChild.textContent = `Borrado Correctamente`;
+            break;
+    }
+
+    document.getElementById("modalIcon").textContent = "check_circle";
+    setTimeout(() => {
+        modalMessage.style.display = "none";
+    }, 2000);
+
 }
 
 //Validations
@@ -358,7 +683,8 @@ const validateLink = (link) =>{
     if (link.includes("youtube.com") ||
         link.includes("dailymotion.com") ||
         link.includes("vimeo.com") ||
-        link.includes("facebook.com")) {
+        link.includes("facebook.com") ||
+        link.includes("reddit.com")) {
             return true;
         }
         return false;
@@ -366,7 +692,11 @@ const validateLink = (link) =>{
 
 const validateImage = (file) => {
     return new Promise((resolve) => {
-        // Si no hay archivo o no es tipo imagen, rechazamos rápido
+
+        if (typeof file == "string") {
+            resolve(true);
+        }
+
         if (!file || !file.type.startsWith('image/')) {
             resolve(false);
             return;
@@ -377,16 +707,14 @@ const validateImage = (file) => {
         
         img.src = url;
 
-        // Si carga bien, devolvemos TRUE
         img.onload = function() {
             resolve(true);
-            URL.revokeObjectURL(url); // Limpiamos memoria
+            URL.revokeObjectURL(url); 
         };
 
-        // Si falla (es un archivo corrupto o falso), devolvemos FALSE
         img.onerror = function() {
             resolve(false);
-            URL.revokeObjectURL(url); // Limpiamos memoria
+            URL.revokeObjectURL(url); 
         };
     });
 };
@@ -450,7 +778,7 @@ const uploadData= async (e)=>{
             image: file, 
             pos: inputPos.value
         }
-        shiftPositionsAndAdd(newVideo);
+        await shiftPositionsAndAdd(newVideo);
         showCorrectlyMessage();
     } else showErrorMessage(validationResult.msg); 
 
@@ -460,26 +788,27 @@ submitButton.addEventListener("click",uploadData);
 
 
 
-//Open Modal
-
+//Modals
 const modalContainer = document.querySelector(".modal-container");
 
+
+//Add Modal
 const openModal=(e)=>{
     e.preventDefault();
-    //modalContainer.style.display="flex";
     modalContainer.classList.add("modal-container-active");
+    addVideoModal.style.display = "block"; 
+    modalConfirm.style.display = "none";
 }
 
 const addButton = document.querySelector(".aside__button");
 
 addButton.addEventListener("click",openModal);
 
-//Close Modal
 
 const closeButton = document.querySelector(".close-button");
 
 const closeModal=()=>{
-    modalContainer.classList.remove("modal-container-active");
+    closeAllModals();
     modalMessage.style.display="none";
     inputTitle.value="";
     inputLink.value="";
@@ -497,4 +826,68 @@ const closeModal=()=>{
 
 closeButton.addEventListener("click",closeModal);
 
+
+//deleteModal
+
+let keyToDelete = null;
+
+const modalConfirm = document.querySelector(".modal-confirm");
+const btnYes = document.getElementById("btnYes");
+const btnNo = document.getElementById("btnNo");
+const addVideoModal = document.querySelector(".modal");
+
+
+const closeConfirmModal = () => {
+    modalContainer.style.display = "none";
+    modalConfirm.style.display = "none";
+    keyToDelete = null;
+};
+
+const closeAllModals = () => {
+    modalContainer.classList.remove("modal-container-active");
+    addVideoModal.style.display = "block"; 
+    modalConfirm.style.display = "none";
+    keyToDelete = null;
+};
+
+    btnYes.addEventListener("click", async () => {
+        if (keyToDelete !== null) {
+            await deleteObject(keyToDelete);
+            readObjects();
+            showDeletedMessage();
+            
+            closeConfirmModal();
+        }
+    });
+
+    btnNo.addEventListener("click", () => {
+        closeAllModals();
+    });
+
+    addButton.addEventListener("click", (e) => {
+    openModal(e);
+    addVideoModal.style.display = "block";
+    modalConfirm.style.display = "none";   
+});
+
+
+//Search a video
+
+const searchTitleInput= document.getElementById("searchTitleInput");
+const searchPosInput = document.getElementById("searchPosInput");
+
+const searchTitleButton = document.getElementById("searchTitleButton");
+const searchPosButton = document.getElementById("searchPosButton");
+
+searchTitleButton.addEventListener("click",()=>{
+    const query = searchTitleInput.value.trim();
+    if (query !== "") searchByTitle(query.toLowerCase());
+    searchPosInput.value="";
+})
+
+searchPosButton.addEventListener("click",()=>{
+    const pos = searchPosInput.value;
+    if (pos !== "") searchByPosition(pos);
+    searchTitleInput.value="";
+})
 

@@ -44,17 +44,21 @@
                             <input type="submit" class="form__input form__input-submit" value="Add">
                         </div>
                     </div>
-            
-
                 </form>
             </div>
         </div>
-        <div class="modal-message-container">
-            <div class="modal-message">
-                <div class="modal-message-text"></div>
-                <span class="material-symbols-outlined close-button" id="modalIcon"></span>
-            </div>
-        </div>
+            <div class="modal-confirm" style="display: none;">
+                    <div class="modal-header">
+                        <div class="modal-content" id="confirmAction"></div>
+                    </div>
+                    <div class="modal-content">
+                        <p id="confirmText"></p>
+                        <div class="confirm-buttons">
+                            <button id="btnYes" class="form__input-submit"></button>
+                            <button id="btnNo" class="form__input-submit">No, Cancel</button>
+                        </div>
+                    </div>
+            </div>        
     </div>
     <header class="header">
         <input type="checkbox" id="menu-toggle" class="header__checkbox">
@@ -89,9 +93,29 @@
             <button class="aside__button">
                 <a href="" id="aside__button-list" aria-label="Button that adds a new video">Add</a>
             </button>
+            <div class="aside__input-container">
+                <label class="aside__label" id="titleSearch"></label>
+                <input type="text" class="aside__input" id="searchTitleInput">
+                <button class="aside__button aside__button-search" id="searchTitleButton">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+            </div>
+            <div class="aside__input-container" id="asidePosContainer">
+                <label class="aside__label" id="positionSearch"></label>
+                <input type="number" class="aside__input-pos aside__input" placeholder="116" id="searchPosInput">
+                <button class="aside__button aside__button-search" id="searchPosButton">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+            </div>
         </aside>
     </div>
     <footer class="footer"></footer>
+    <div class="modal-message-container">
+        <div class="modal-message">
+            <div class="modal-message-text"></div>
+            <span class="material-symbols-outlined close-button" id="modalIcon"></span>
+        </div>
+    </div>
     <script src="main-list.js"></script>
     <script src="changeLanguage.js"></script>
 </body>
