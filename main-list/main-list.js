@@ -126,7 +126,6 @@ const shiftPositionsAndAdd = (newVideoData) => {
 };
 
 const reorderVideos = (key, oldPos, newPos) => {
-    console.log("la llave es"+key+"la posicion es"+oldPos+"la nueva es"+newPos);
     return new Promise((resolve, reject) => {
         const db = IDBRequest.result;
         const transaction = db.transaction("videos", "readwrite");
