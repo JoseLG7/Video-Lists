@@ -126,6 +126,7 @@ const shiftPositionsAndAdd = (newVideoData) => {
 };
 
 const reorderVideos = (key, oldPos, newPos) => {
+    console.log("la llave es"+key+"la posicion es"+oldPos+"la nueva es"+newPos);
     return new Promise((resolve, reject) => {
         const db = IDBRequest.result;
         const transaction = db.transaction("videos", "readwrite");
@@ -134,15 +135,17 @@ const reorderVideos = (key, oldPos, newPos) => {
         oldPos = parseInt(oldPos);
         newPos = parseInt(newPos);
 
+        const targetKey = isNaN(key) ? key : parseInt(key);
+
         const cursorRequest = store.openCursor();
 
         cursorRequest.onsuccess = (e) => {
             const cursor = e.target.result;
             if (cursor) {
                 const video = cursor.value;
+                const currentKey = cursor.primaryKey;
                 let updateNeeded = false;
-
-                if (video.idDB === key) { 
+                if (currentKey === targetKey) { 
                     video.pos = newPos;
                     updateNeeded = true;
                 }
@@ -537,22 +540,26 @@ const addVideoToList = (link,image,title,pos,key=null)=> {
 
         saveButton.addEventListener("click",async()=>{
             let file = (imageInput.files.length > 0) ? imageInput.files[0] : image;
+            const newPos = Number(posInput.value);
 
-
-            const validationResult = await validateData(liContainerText.firstElementChild.textContent,
-                linkInput.value, file, posInput.value
-            );
-            if (validationResult.isValid) {
-
-                const modifiedVideo = {
+            const modifiedVideo = {
                     title: liContainerText.firstElementChild.textContent, 
                     link: linkInput.value, 
                     image: file, 
-                    pos: posInput.value
+                    pos: newPos
                 }
 
-                const newPos = parseInt(posInput.value);
-                const oldPos = parseInt(pos);
+            console.log("Tipo de dato de pos:", typeof modifiedVideo.pos);
+
+            const validationResult = await validateData(modifiedVideo.title,
+                    modifiedVideo.link, 
+                    modifiedVideo.image, 
+                    modifiedVideo.pos);
+
+
+            if (validationResult.isValid) {
+
+                const oldPos = Number(pos);
 
                 if (newPos === oldPos) {
                     await modifyObject(key,modifiedVideo);
