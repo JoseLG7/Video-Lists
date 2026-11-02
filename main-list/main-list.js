@@ -230,13 +230,27 @@ const readObjects = (focusKey = null)=>{
     });
 };
 
-const deleteObject = (key) => {
+const deleteObject = (key, targetPos) => {
     return new Promise((resolve, reject) => {
         const db = IDBRequest.result;
         const transaction = db.transaction("videos", "readwrite");
         const objectStore = transaction.objectStore("videos");
         
         objectStore.delete(key);
+        const cursorRequest = objectStore.openCursor();
+
+        cursorRequest.onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+                const video = cursor.value;
+                if (video.pos >= targetPos) {
+                    video.pos -= 1;
+                    cursor.update(video);
+                }
+                cursor.continue();
+            }
+        };
+
 
         transaction.oncomplete = () => {
             console.log("Objeto borrado correctamente");
@@ -265,6 +279,33 @@ const getListLength = () => {
 
         request.onerror = () => {
             reject("Error contando elementos");
+        };
+    });
+};
+
+const getPositionByKey = (key) => {
+    return new Promise((resolve, reject) => {
+        const db = IDBRequest.result;
+        if (!db) return reject("La base de datos no está abierta");
+
+        const transaction = db.transaction("videos", "readonly");
+        const store = transaction.objectStore("videos");
+        
+        const targetKey = isNaN(key) ? key : parseInt(key);
+        const request = store.get(targetKey);
+
+        request.onsuccess = (e) => {
+            const data = e.target.result;
+            if (data) {
+                resolve(data.pos);
+            } else {
+                reject("No se encontró ningún registro con esa key");
+            }
+        };
+
+        request.onerror = (error) => {
+            console.error("Error al buscar la posición por key:", error);
+            reject(error);
         };
     });
 };
@@ -858,7 +899,8 @@ const closeAllModals = () => {
 
     btnYes.addEventListener("click", async () => {
         if (keyToDelete !== null) {
-            await deleteObject(keyToDelete);
+            let targetPos = await getPositionByKey(keyToDelete)
+            await deleteObject(keyToDelete, targetPos);
             readObjects();
             showDeletedMessage();
             
